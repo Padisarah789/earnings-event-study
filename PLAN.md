@@ -25,7 +25,7 @@ longer matches the raw data.
 ## Open data issues
 
 - [ ] Decide on a second source to cross-check all 360 dates (e.g. SEC 8-K Item 2.02 filing dates), or document Yahoo as the only source. Only the 4 flagged records were checked by hand.
-- [ ] DIS switched from AMC to BMO in 2024. This looks genuine but hasn't been checked.
+- [x] DIS switched from AMC to BMO in 2024: verified at the switch point (2024-02-07 AMC, 2024-05-07 BMO), no change.
 - [ ] Note the survivorship bias: the universe is the *current* Dow (GOOGL joined 2026-06-29, NVDA and SHW joined 2024-11-08, AMZN joined 2024-02-26), not the members at each event date.
 
 ## Next: event windows and abnormal returns (in SQL)

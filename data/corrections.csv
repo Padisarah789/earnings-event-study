@@ -3,3 +3,5 @@ CVX,2023-07-23,timing,AMC,AMC,"Chevron press release, preliminary Q2 2023 result
 AMGN,2023-10-31,timing,BMO,BMO,"Amgen press release, Q3 2023 results","verified, no change; before-open release that quarter"
 AMZN,2024-08-01,timing,DMH,AMC,"Amazon investor relations, Q2 2024 results","call at 2:30 PM PT, after the 4:00 PM ET close"
 AXP,2024-04-19,timing,DMH,BMO,"American Express Business Wire announcement, Q1 2024 results",results scheduled for ~7:00 AM ET
+DIS,2024-02-07,timing,AMC,AMC,manual check by project owner,"verified, no change; last after-close release before Disney switched to before-open"
+DIS,2024-05-07,timing,BMO,BMO,manual check by project owner,"verified, no change; first before-open release after the switch"
