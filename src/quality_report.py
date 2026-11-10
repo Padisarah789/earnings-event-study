@@ -92,14 +92,31 @@ def main() -> None:
         WHERE announce_date - prev_date < 60
     """)
 
+    section("Manual corrections (data/corrections.csv)")
+    show(con, """
+        SELECT ticker, announce_date, field, old_value, new_value,
+               CASE WHEN old_value = new_value THEN 'verified' ELSE 'corrected' END AS action
+        FROM corrections ORDER BY ticker, announce_date
+    """)
+
     section("Events whose timing differs from the ticker's usual timing")
     show(con, """
         WITH usual AS (
             SELECT ticker, MODE(timing) AS usual_timing FROM events GROUP BY ticker)
-        SELECT e.ticker, e.announce_date, e.timing, u.usual_timing
+        SELECT e.ticker, e.announce_date, e.timing, u.usual_timing,
+               c.ticker IS NOT NULL AS manually_checked
         FROM events e JOIN usual u USING (ticker)
+        LEFT JOIN corrections c
+               ON c.ticker = e.ticker AND CAST(c.announce_date AS DATE) = e.announce_date
         WHERE e.timing <> u.usual_timing
         ORDER BY e.ticker, e.announce_date
+    """)
+
+    section("Events during market hours (DMH) or with unknown timing")
+    show(con, """
+        SELECT ticker, announce_date, timing FROM events
+        WHERE timing NOT IN ('BMO', 'AMC') OR timing IS NULL
+        ORDER BY ticker, announce_date
     """)
 
     section(f"Daily price moves larger than {LARGE_MOVE:.0%} (check splits/spin-offs)")
