@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR = ROOT / "data" / "raw"
 PRICES_CSV = RAW_DIR / "prices.csv"
 EARNINGS_CSV = RAW_DIR / "earnings_dates.csv"
+CORRECTIONS_CSV = ROOT / "data" / "corrections.csv"  # manual fixes, in git
 DB_PATH = ROOT / "data" / "earnings.duckdb"
 
 # Each company reports once a quarter, so 3 years should give about 12 events.
