@@ -21,6 +21,8 @@ EARNINGS_CSV = RAW_DIR / "earnings_dates.csv"
 CORRECTIONS_CSV = ROOT / "data" / "corrections.csv"  # manual fixes, in git
 DB_PATH = ROOT / "data" / "earnings.duckdb"
 SQL_DIR = ROOT / "sql"
+RESULTS_DIR = ROOT / "results"
+FIGURES_DIR = ROOT / "figures"
 
 # Event window, in trading days relative to day 0.
 WINDOW_START = -5
