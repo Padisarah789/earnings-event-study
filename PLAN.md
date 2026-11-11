@@ -43,12 +43,23 @@ Notes:
 - CVX 2023-07-23 was a preliminary Sunday release. Chevron's full Q2 results (Fri 2023-07-28) fall at day +4 of the same window, so CAR[-5,+5] mixes the two announcements.
 - AR uses the market-adjusted model (beta = 1 for every stock). A market model with estimated alpha/beta is an optional upgrade.
 
-## Next: statistics and presentation
+## Done: statistical tests and charts (2026-11-11)
 
-- [ ] Average AR by relative day and average CAR across events
-- [ ] t-statistics (cross-sectional), possibly split by BMO/AMC or by sector
+Run order: `load.py` -> `build_events.py` -> `analyze.py` and `charts.py`.
+
+- [x] `src/analyze.py`: one-sample t-tests (H0: mean = 0, two-sided, n = 360) on day-0 AR, CAR[-1,+1], CAR[-5,+5], and |AR| day 0 minus mean |AR| days -5..-2. Results in `results/summary.csv`, plus hand-recompute inputs (mean, sd, n, se).
+- [x] `src/charts.py`: three PNGs in `figures/`: mean AR by day with 95% CIs, mean |AR| by day, day-0 AR histogram with a normal curve.
+
+Method notes (for the write-up):
+- The t-tests treat the 360 events as independent. Events cluster in time (e.g. banks all report the same week), so the standard errors may be understated.
+- Same market-adjusted AR as above (beta = 1).
+
+## Next
+
+- [ ] Write the interpretation and conclusions in the README (owner)
+- [ ] Optional: tests that allow for clustered events (e.g. calendar-time portfolios or the Kolari-Pynnönen adjustment)
+- [ ] Optional: split by BMO/AMC or by sector
 - [ ] Optional: market-model alpha/beta per event (estimation window e.g. -250 to -30)
-- [ ] Notebook with charts and write-up
 
 ## Log
 
