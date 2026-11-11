@@ -20,6 +20,11 @@ PRICES_CSV = RAW_DIR / "prices.csv"
 EARNINGS_CSV = RAW_DIR / "earnings_dates.csv"
 CORRECTIONS_CSV = ROOT / "data" / "corrections.csv"  # manual fixes, in git
 DB_PATH = ROOT / "data" / "earnings.duckdb"
+SQL_DIR = ROOT / "sql"
+
+# Event window, in trading days relative to day 0.
+WINDOW_START = -5
+WINDOW_END = 5
 
 # Each company reports once a quarter, so 3 years should give about 12 events.
 # Allow one fewer for quarters that fall just outside the window.
