@@ -5,7 +5,7 @@ Run: python src/quality_report.py
 
 import duckdb
 
-from config import DB_PATH, MIN_EXPECTED_EVENTS
+from config import DB_PATH, MIN_EXPECTED_EVENTS, WINDOW_END, WINDOW_START
 
 LARGE_MOVE = 0.15  # flag daily returns above 15% in either direction
 
@@ -138,7 +138,71 @@ def main() -> None:
         ORDER BY t.ticker
     """)
 
+    event_checks(con)
     con.close()
+
+
+def event_checks(con) -> None:
+    """Checks on the tables built by src/build_events.py."""
+    built = {r[0] for r in con.execute(
+        "SELECT table_name FROM information_schema.tables").fetchall()}
+    needed = {"daily_returns", "event_days", "abnormal_returns", "car"}
+    if not needed <= built:
+        print(f"\n(Event tables not built yet: run src/build_events.py. "
+              f"Missing: {', '.join(sorted(needed - built))})")
+        return
+
+    n_days = WINDOW_END - WINDOW_START + 1
+
+    section(f"Events without exactly {n_days} window rows")
+    show(con, f"""
+        SELECT ed.ticker, ed.announce_date, COUNT(ar.rel_day) AS rows
+        FROM event_days ed
+        LEFT JOIN abnormal_returns ar USING (event_id)
+        GROUP BY ALL
+        HAVING COUNT(ar.rel_day) <> {n_days}
+        ORDER BY ed.ticker, ed.announce_date
+    """)
+
+    section("Events missing from event_days (lost between events and the windows)")
+    show(con, """
+        SELECT e.ticker, e.announce_date, e.timing
+        FROM events e
+        ANTI JOIN event_days ed USING (ticker, announce_date)
+    """)
+
+    section("Window rows with missing returns")
+    show(con, """
+        SELECT ticker, announce_date, rel_day, date, stock_ret, spy_ret, ar
+        FROM abnormal_returns
+        WHERE date IS NULL OR stock_ret IS NULL OR spy_ret IS NULL OR ar IS NULL
+        ORDER BY ticker, announce_date, rel_day
+    """)
+
+    section("Day 0 that is missing, not a trading day, or before the announcement")
+    show(con, """
+        SELECT ticker, announce_date, timing, day0
+        FROM event_days
+        WHERE day0 IS NULL
+           OR day0 NOT IN (SELECT date FROM daily_returns WHERE ticker = 'SPY')
+           OR day0 < announce_date
+           OR (timing = 'AMC' AND day0 = announce_date)
+        ORDER BY ticker, announce_date
+    """)
+
+    section("Day 0 more than 4 calendar days after the announcement")
+    show(con, """
+        SELECT ticker, announce_date, timing, day0, day0 - announce_date AS days_later
+        FROM event_days
+        WHERE day0 - announce_date > 4
+    """)
+
+    section("Events with a missing CAR")
+    show(con, """
+        SELECT ticker, announce_date, car_m1_p1, car_m5_p5
+        FROM car
+        WHERE car_m1_p1 IS NULL OR car_m5_p5 IS NULL
+    """)
 
 
 if __name__ == "__main__":
