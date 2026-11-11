@@ -28,12 +28,24 @@ longer matches the raw data.
 - [x] DIS switched from AMC to BMO in 2024: verified at the switch point (2024-02-07 AMC, 2024-05-07 BMO), no change.
 - [ ] Note the survivorship bias: the universe is the *current* Dow (GOOGL joined 2026-06-29, NVDA and SHW joined 2024-11-08, AMZN joined 2024-02-26), not the members at each event date.
 
-## Next: event windows and abnormal returns (in SQL)
+## Done: event windows and abnormal returns in SQL (2026-11-11)
 
-- [ ] Daily returns table from `prices`
-- [ ] Map each event to its event day 0: the announce date if BMO, the next trading day if AMC (and the next trading day if the announce date is not a trading day, e.g. CVX 2023-07-23)
-- [ ] Estimation window (e.g. trading days -250 to -30) and event windows (e.g. [-1,+1], [-5,+5])
-- [ ] Market-model alpha/beta per event, estimated against SPY
-- [ ] Abnormal returns (AR) and cumulative abnormal returns (CAR)
-- [ ] Average CAR across events, with t-statistics
+Run order: `load.py` -> `build_events.py` -> `quality_report.py` / `spot_check.py`.
+
+- [x] `sql/01_daily_returns.sql`: daily returns plus a per-ticker trading-day index
+- [x] `sql/02_event_days.sql`: day 0 is the announce date for BMO and the next trading day for AMC. Non-trading dates roll forward to the next trading day.
+- [x] `sql/03_abnormal_returns.sql`: 11 rows per event (-5..+5 trading days), AR = stock return - SPY return (market-adjusted model)
+- [x] `sql/04_car.sql`: CAR[-1,+1] and CAR[-5,+5] per event, as a simple sum of daily ARs
+- [x] Quality checks: 11 rows per event, no missing returns, day 0 is always a trading day. All pass for the 360 events.
+- [x] `src/spot_check.py`: NVDA 2023-05-24 and CVX 2023-07-23 windows, plus the top/bottom 5 day-0 ARs, for hand checking
+
+Notes:
+- CVX 2023-07-23 was a preliminary Sunday release. Chevron's full Q2 results (Fri 2023-07-28) fall at day +4 of the same window, so CAR[-5,+5] mixes the two announcements.
+- AR uses the market-adjusted model (beta = 1 for every stock). A market model with estimated alpha/beta is an optional upgrade.
+
+## Next: statistics and presentation
+
+- [ ] Average AR by relative day and average CAR across events
+- [ ] t-statistics (cross-sectional), possibly split by BMO/AMC or by sector
+- [ ] Optional: market-model alpha/beta per event (estimation window e.g. -250 to -30)
 - [ ] Notebook with charts and write-up
