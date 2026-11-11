@@ -49,3 +49,7 @@ Notes:
 - [ ] t-statistics (cross-sectional), possibly split by BMO/AMC or by sector
 - [ ] Optional: market-model alpha/beta per event (estimation window e.g. -250 to -30)
 - [ ] Notebook with charts and write-up
+
+## Log
+
+- 2026-11-11 — Day 2: event windows and abnormal returns built in SQL; NVDA and CVX windows verified by hand.
