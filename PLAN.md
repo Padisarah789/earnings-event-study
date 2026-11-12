@@ -54,9 +54,12 @@ Method notes (for the write-up):
 - The t-tests treat the 360 events as independent. Events cluster in time (e.g. banks all report the same week), so the standard errors may be understated.
 - Same market-adjusted AR as above (beta = 1).
 
-## Next
+## Done: final README (2026-11-12)
 
-- [ ] Write the interpretation and conclusions in the README (owner)
+- [x] README: overview, research questions, method, results table, the three charts, Findings and Limitations (the owner's text, copied verbatim from findings.md, which was then deleted), how to run, repository structure, data sources and corrections
+- [x] "How to run" steps tested end to end in a fresh clone. All steps run. The re-run results match the committed `results/summary.csv` to within 1e-7 in the means and medians, which is rounding-level.
+
+## Next (optional)
 - [ ] Optional: tests that allow for clustered events (e.g. calendar-time portfolios or the Kolari-Pynnönen adjustment)
 - [ ] Optional: split by BMO/AMC or by sector
 - [ ] Optional: market-model alpha/beta per event (estimation window e.g. -250 to -30)
@@ -64,3 +67,4 @@ Method notes (for the write-up):
 ## Log
 
 - 2026-11-11 — Day 2: event windows and abnormal returns built in SQL; NVDA and CVX windows verified by hand.
+- 2026-11-12 — Day 4: final README assembled; how-to-run steps verified in a fresh clone.
